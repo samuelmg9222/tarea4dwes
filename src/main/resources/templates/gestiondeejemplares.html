@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vivero</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      background-color: #333333;
+    }
+
+    header {
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #333333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 45px;
+      margin: 0;
+      text-align: center;
+      color:#4CAF50;
+      transform: translateX(100%);
+    }
+
+    button {
+      background-color: #009e00;
+      color: #ffffff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+
+    form {
+      display: inline-block;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #444444;
+    }
+
+    footer {
+      width: 100%;
+      background-color: #333333;
+      color: #ffffff;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    footer h4 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main content styling */
+    .main-content {
+      width: 90%;
+      display: flex;
+      flex-wrap: wrap; /* Permite que las tarjetas se ajusten a varias filas */
+      justify-content: space-between; /* Distribuye las tarjetas en el espacio disponible */
+      gap: 20px; /* Espacio entre las tarjetas */
+      margin-top: 30px;
+    }
+
+    .card {
+      width: 30%; /* Las tarjetas ocuparán un 30% del ancho */
+      background-color: #4b4b4b;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px; /* Espacio entre las tarjetas en la fila inferior */
+    }
+
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover; /* Hace que la imagen cubra el espacio sin distorsionarse */
+      border-radius: 10px;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 20px;
+    }
+
+    .card p {
+      font-size: 16px;
+    }
+
+    /* Centrar las dos tarjetas de la segunda fila */
+    .main-content .card:nth-child(n+4) {
+      width: 45%; /* Las dos últimas tarjetas ocupan el 45% del ancho */
+      margin-left: auto; /* Alinea las tarjetas a la derecha */
+      margin-right: auto; /* Alinea las tarjetas a la izquierda */
+    }
+
+    /* Diseño responsivo para pantallas más pequeñas */
+ 
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gestión de Ejemplares</h1>
+    <nav>
+    
+      <form method="GET">
+    <button type="button" onclick="window.history.back();">Volver</button>
+</form>
+    </nav>
+  </header> 
+
+  <main class="main-content">
+    <!-- Tarjeta 1: Nueva Planta -->
+    <div class="card">
+      <img th:src="@{/images/nuevoejemplar.jpg}" alt="Nuevo ejemplar">
+      <form th:action="@{/nuevoejemplar}">
+        <button type="submit">Nuevo ejemplar</button>
+      </form>
+      <p>Añade un ejemplar</p>
+    </div>
+
+    <!-- Tarjeta 2: Modificar Planta -->
+    <div class="card">
+      <img th:src="@{/images/crearmensjae.jpg}" alt="Modificar planta">
+      <form th:action="@{/crearmensaje}">
+        <button type="submit">Crear mensaje</button>
+      </form>
+      <p>Crea un mensaje asociado a un ejemplar</p>
+    </div>
+
+    <!-- Tarjeta 3: Modificar Planta -->
+    <div class="card">
+      <img th:src="@{/images/mensjaeejmeplar.jpg}" alt="Modificar planta">
+      <form th:action="@{/vermensajes}">
+        <button type="submit">Ver mensajes de ejemplar</button>
+      </form>
+      <p>Ver mensajes para ejemplar que selecciones</p>
+    </div>
+
+    <!-- Tarjeta 4: Modificar Planta (se centrarán con las siguientes) -->
+    <div class="card">
+      <img th:src="@{/images/filtrartipoplanta.jpg}" alt="Filtrar planta">
+      <form th:action="@{/filtrarplantatipo}">
+        <button type="submit">Filtrar por tipo de planta</button>
+      </form>
+      <p>Filtrar ejemplar por tipo de planta que elijas</p>
+    </div>
+
+    <!-- Tarjeta 5: Ver Todas las Plantas -->
+    <div class="card">
+      <img th:src="@{/images/filtrar.jpg}" alt="Filtrar">
+      <form th:action="@{/filtrarfechas}">
+        <button type="submit">Filtrar por fechas</button>
+      </form>
+      <form th:action="@{/filtrartipo}">
+        <button type="submit">Filtrar por tipo de planta</button>
+      </form>
+      <form th:action="@{/filtrarusuario}">
+        <button type="submit">Filtrar por usuario</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <h4>Vivero de Samuel Muñiz González</h4>
+    <p>Cuidamos de tus plantas, para que ellas cuiden de ti.</p>
+    <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
+    <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
+  </footer>
+
+</body>
+</html>
