@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Planta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        h2 {
+            color: white;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            background-color: #333333;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+         .error-message {
+            color: red;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>VIVERO</h1>
+        <nav>
+            <form action="/modificarplanta" method="GET">
+                <button type="submit">Volver</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Editar Planta</h2>
+
+        <!-- Formulario de edición de planta -->
+       <form th:action="@{/modificarplanta/{id}(id=${planta.id})}" method="POST" th:object="${planta}">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="input-field">
+        <label for="nombrecomun">Nombre Común</label>
+        <input type="text" th:field="*{nombrecomun}" id="nombrecomun" required />
+    </div>
+
+    <div class="input-field">
+        <label for="nombrecientifico">Nombre Científico</label>
+        <input type="text" th:field="*{nombrecientifico}" id="nombrecientifico" required />
+    </div>
+
+    <button type="submit" class="btn-submit">Modificar Planta</button>
+</form>
+
+    </div>
+  <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- Mensaje de éxito -->
+        <div th:if="${success}" class="success-message">
+            <p th:text="${success}"></p>
+        </div>
+    
+    <footer>
+        <h4>Vivero de Samuel Muñiz González</h4>
+        <p>Cuidamos de tus plantas, para que ellas cuiden de ti.</p>
+        <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
+        <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
+    </footer>
+
+</body>
+</html>
+

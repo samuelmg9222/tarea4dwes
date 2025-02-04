@@ -15,6 +15,34 @@
             justify-content: space-between;
             height: 100vh;
         }
+  header {
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #333333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 45px;
+      margin: 0;
+      text-align: center;
+      color:#4CAF50;
+      transform: translateX(100%);
+    }
+
+    button {
+      background-color: #009e00;
+      color: #ffffff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
 
         .container {
             width: 80%;
@@ -62,75 +90,6 @@
             background-color: #388e3c;
         }
 
-        .login-container {
-            background-color: #4b4b4b;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 50px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .btn-submit:hover {
-            background-color: #45a049;
-        }
-
-        header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #333333;
-        }
-
-        header h1 {
-            font-size: 45px;
-            margin: 0;
-            color: #4CAF50;
-        }
-
-        nav button {
-            background-color: #009e00;
-            color: #ffffff;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        nav button:hover {
-            background-color: #444444;
-        }
-
         footer {
             background-color: #333333;
             color: #ffffff;
@@ -155,8 +114,8 @@
     <header>
         <h1>VIVERO</h1>
         <nav>
-            <form action="gestiondeplantas.html" method="GET">
-                <button type="submit">Volver</button>
+            <form method="GET">
+   <button type="button" onclick="window.location.href='/gestiondeplantas';">Volver</button>
             </form>
         </nav>
     </header>
@@ -177,35 +136,14 @@
                     <td th:text="${planta.codigo}">Código</td>
                     <td th:text="${planta.nombrecomun}">Nombre común</td>
                     <td th:text="${planta.nombrecientifico}">Nombre científico</td>
-                    <td class="boton-editar">
-                        <button class="btn-edit"
-                                th:data-id="${planta.id}"
-                                th:data-nombrecomun="${planta.nombrecomun}"
-                                th:data-nombrecientifico="${planta.nombrecientifico}"
-                                onclick="mostrarFormulario(this)">
-                            Editar
-                        </button>
+                    <td>
+                        <a th:href="@{/edicionplanta/{id}(id=${planta.id})}" class="btn-edit">Editar</a>
+
                     </td>
                 </tr>
             </tbody>
         </table>
-
-    <form action="/modificarplanta" method="POST" th:object="${planta}">
-    <input type="hidden" th:field="*{id}" id="plantaId"/>
-    
-    <div class="input-field">
-        <label for="nombrecomun">Nombre Común</label>
-        <input type="text" th:field="*{nombrecomun}" id="nombrecomun" required />
     </div>
-    <div class="input-field">
-        <label for="nombrecientifico">Nombre Científico</label>
-        <input type="text" th:field="*{nombrecientifico}" id="nombrecientifico" required />
-    </div>
-    
-    <button type="submit" class="btn-submit">Modificar Planta</button>
-</form>
-
-    
 
     <footer>
         <h4>Vivero de Samuel Muñiz González</h4>
@@ -214,16 +152,5 @@
         <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
     </footer>
 
-    <script>
-        function mostrarFormulario(boton) {
-            document.getElementById("form-container").style.display = "block";
-
-            document.getElementById("plantaId").value = boton.getAttribute("data-id");
-            document.getElementById("nombrecomun").value = boton.getAttribute("data-nombrecomun");
-            document.getElementById("nombrecientifico").value = boton.getAttribute("data-nombrecientifico");
-        }
-    </script>
-
 </body>
 </html>
-

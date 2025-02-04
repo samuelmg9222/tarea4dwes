@@ -147,44 +147,53 @@ public class MainController {
         }
     }
     @GetMapping("/modificarplanta")
-    public String mostrarPlantasYFormulario(Model model) {
-    
+    public String listarPlantas(Model model) {
         List<Planta> plantas = servplant.verPlantas();
         model.addAttribute("plantas", plantas);
-
-
-        model.addAttribute("planta", new Planta());
-        
-        return "modificarplanta"; 
+        return "modificarplanta"; // Vista con la lista de plantas
     }
 
  
-    @GetMapping("/modificarplanta/{id}")
-    public String mostrarFormularioEdicion(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/edicionplanta/{id}")
+    public String editarPlanta(@PathVariable("id") Long id, Model model) {
         Optional<Planta> planta = servplant.obtenerPlantaPorId(id);
-
         if (planta.isPresent()) {
-            model.addAttribute("planta", planta.get()); 
-        } else {
-            model.addAttribute("error", "Planta no encontrada");
-            return "redirect:/modificarplanta"; 
+            model.addAttribute("planta", planta.get());
+            return "edicionplanta";
         }
-
-        List<Planta> plantas = servplant.verPlantas();
-        model.addAttribute("plantas", plantas);
-
-        return "modificarplanta";
+        model.addAttribute("error", "Planta no encontrada");
+        return "redirect:/modificarplanta"; 
     }
 
-   
-    @PostMapping("/modificarplanta")
-    public String modificarPlanta(@ModelAttribute Planta planta, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "modificarplanta"; // Volver al formulario si hay errores
-        }
-
-        servplant.modificarplanta(planta);
-        return "redirect:/gestiondeplantas"; // Redirigir a la lista de plantas después de modificar
-    }
-
-    }
+    // Modificar los datos de la planta
+    @PostMapping("/modificarplanta/{id}")
+    public String modificarPlanta(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model) {
+    	 List<Planta> plantas=servplant.verPlantas();
+    	 planta.setId(id);
+    	   int validacion = servplant.verificarModificacion(planta, plantas);
+           
+           
+           switch (validacion) {
+          
+               case -2:
+                   model.addAttribute("error", "Error: El nombre comun debe de tener entre 3 y 100 caracteres, solo letras y espacios.");
+                   return "edicionplanta"; 
+               case -3:
+                   model.addAttribute("error", "Error: El nombre cientifico debe de tener entre 3 y 100 caracteres, solo letras y espacios.");
+                   return "edicionplanta"; 
+               case -4:
+                   model.addAttribute("error", "Debe de modificar almenos un campo, no dejarlos iguales.");
+                   return "edicionplanta"; 
+               case 1:
+            		model.addAttribute("success", "Planta modificada correctamente");
+            		servplant.modificarplanta(planta);
+                    return "edicionplanta";
+               default:
+               
+                   return "edicionplanta"; 
+                   
+           }
+       }
+        
+    
+}

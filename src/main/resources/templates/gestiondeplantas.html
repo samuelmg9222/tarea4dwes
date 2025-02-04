@@ -147,7 +147,7 @@
     <!-- Tarjeta 2: Gestión de Ejemplares -->
     <div class="card">
       <img th:src="@{/images/modificarcard.jpg}" alt="Modificar planta">
-     <form th:action="@{/modificarplanta}" method="POST">
+     <form th:action="@{/modificarplanta}" method=GET>
         <button type="submit">Modificar planta</button>
       </form>
     
@@ -157,9 +157,9 @@
     <!-- Tarjeta 3: Gestión de Personal -->
     <div class="card">
       <img th:src="@{/images/vertodascard.jpg}" alt="Ver plantas">
-      <form>
-        <button type="submit">Ver todas</button>
-      </form>
+              <form th:action="@{/verplantas}" method="GET">
+            <button type="submit">Ver plantas</button>
+        </form>
     
       <p>Ve todas las plantas que hay.</p>
     </div>

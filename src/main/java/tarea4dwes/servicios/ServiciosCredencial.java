@@ -29,7 +29,7 @@ public class ServiciosCredencial {
 	        if (cred == null) {
 	            return -1;
 	        }
-	        if (usuario.equals("ADMIN") && contraseña.equals("admin")){
+	        if (usuario.toLowerCase().equals("admin") && contraseña.equals("admin")){
 	            return 0;
 	        }
 

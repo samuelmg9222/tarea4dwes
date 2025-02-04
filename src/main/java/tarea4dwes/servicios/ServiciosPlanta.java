@@ -58,42 +58,50 @@ public class ServiciosPlanta {
 
 			
 
-			if (!p.getNombrecomun().matches("[A-Z][a-zA-Z\\s]{2,99}")) {
+		  if (!p.getNombrecomun().matches("[a-zA-Z\\s]{3,100}"))
+ {
 
 				return -2;
 			}
 
-			if (!p.getNombrecientifico().matches("[A-Z][a-zA-Z\\s]{2,99}")) {
+		  if (!p.getNombrecientifico().matches("[a-zA-Z\\s]{3,100}"))
+ {
 
 				return -3;
 			}
-			Planta plantaAntigua = plantarepos.findByCodigo(p.getCodigo());
-			if (p.getNombrecientifico().equals(plantaAntigua.getNombrecientifico())
-					&& p.getNombrecomun().equals(plantaAntigua.getNombrecomun())) {
+		    Optional<Planta> plantaAntiguaOptional = plantarepos.findById(p.getId());
+		    
 
-				return -4;
-			}
+		    if (!plantaAntiguaOptional.isPresent()) {
+		        return -5; 
+		    }
+
+
+		    Planta plantaAntigua = plantaAntiguaOptional.get();
+
+		
+		    if (p.getNombrecientifico().equals(plantaAntigua.getNombrecientifico()) &&
+		        p.getNombrecomun().equals(plantaAntigua.getNombrecomun())) {
+		        return -4; 
+		    }
 
 			return 1;
 		}
 
 	  
 	  public void modificarplanta(Planta planta) {
-		    
-		    Planta plantaExistente = plantarepos.findByCodigo(planta.getCodigo());
+		    Optional<Planta> plantaExistente = plantarepos.findById(planta.getId());
 
-		    
-		    plantaExistente.setNombrecomun(planta.getNombrecomun());
-		    plantaExistente.setNombrecientifico(planta.getNombrecientifico());
-
-		 
-		    plantarepos.saveAndFlush(plantaExistente);
+		    if (plantaExistente.isPresent()) {
+		        Planta p = plantaExistente.get();
+		        p.setNombrecomun(planta.getNombrecomun());
+		        p.setNombrecientifico(planta.getNombrecientifico());
+		        plantarepos.saveAndFlush(p);
+		    } else {
+		        throw new RuntimeException("Planta no encontrada con ID: " + planta.getId());
+		    }
 		}
-	  
-	  public Planta obtenerPlantaPorCodigo(String codigo) {
-	        return plantarepos.findByCodigo(codigo);
-	    }
-	  
+
 	  
 	  
 	  
