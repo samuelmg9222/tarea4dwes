@@ -1,6 +1,7 @@
 package tarea4dwes.servicios;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -30,7 +31,7 @@ public boolean existePersona(Long i) {
 	 else return true;
 	  
  }
-public int verificarPersona(String nombre,String email,String usuario,String contraseña) {
+public int verificarPersona(String nombre,String email,String usuario,String password) {
 	if(!nombre.matches("^[A-Za-z]+([ -][A-Za-zÀ-ÿ]+)*$")) {
 		return -1;
 	}
@@ -40,7 +41,7 @@ public int verificarPersona(String nombre,String email,String usuario,String con
 	if(!usuario.matches("^[A-Za-z0-9]{3,}$")) {
 		return -3;
 	}
-	if(!contraseña.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+	if(!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
 		return -4;
 	}
 	 if(credencialrepos.existsByUsuario(usuario)) 
@@ -60,6 +61,13 @@ public boolean insertarPersona(Persona pers) {
 }
 public String obtenerNombrePorId(Long id) {
     return personarepos.findNombreById(id);
+}
+
+
+public Optional<Persona> obtenerPersonaPorId(Long i) {
+	Optional<Persona> perosna=personarepos.findById(i);
+	return perosna;
+
 }
 
 }

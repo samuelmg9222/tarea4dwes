@@ -2,6 +2,7 @@ package tarea4dwes.servicios;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,9 @@ public class ServiciosEjemplar {
 	     long contador = ejemplarrepos.countByNombreStartingWith(planta.getCodigo());
 	     return planta.getCodigo() + "_" + (contador + 1);
 	}
-	  public int verificarInsercion(String codigo, List<Planta> pl, int i) {
+	  public int verificarInsercion(String codigo) {
 
-			if (i < 1 || (i - 1) >= pl.size()) {
-				return -1;
-			}
+			
 
 			if (generarNombreEjemplar(codigo)==null) {
 
@@ -71,5 +70,7 @@ return ejemplarrepos.findAll();
 		 else return true;
 		  
 	  }
-	  
+	  public Optional<Ejemplar> obtenerEjempalrPorId(Long id) {
+			 return ejemplarrepos.findById(id);
+		}
 	  }

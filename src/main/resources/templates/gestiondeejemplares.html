@@ -147,7 +147,7 @@
   </header> 
 
   <main class="main-content">
-    <!-- Tarjeta 1: Nueva Planta -->
+
     <div class="card">
       <img th:src="@{/images/nuevoejemplar.jpg}" alt="Nuevo ejemplar">
       <form th:action="@{/nuevoejemplar}">
@@ -156,7 +156,7 @@
       <p>Añade un ejemplar</p>
     </div>
 
-    <!-- Tarjeta 2: Modificar Planta -->
+
     <div class="card">
       <img th:src="@{/images/crearmensjae.jpg}" alt="Modificar planta">
       <form th:action="@{/crearmensaje}">
@@ -165,31 +165,31 @@
       <p>Crea un mensaje asociado a un ejemplar</p>
     </div>
 
-    <!-- Tarjeta 3: Modificar Planta -->
+
     <div class="card">
       <img th:src="@{/images/mensjaeejmeplar.jpg}" alt="Modificar planta">
-      <form th:action="@{/vermensajes}">
+      <form th:action="@{/listaejemplares}">
         <button type="submit">Ver mensajes de ejemplar</button>
       </form>
       <p>Ver mensajes para ejemplar que selecciones</p>
     </div>
 
-    <!-- Tarjeta 4: Modificar Planta (se centrarán con las siguientes) -->
+
     <div class="card">
       <img th:src="@{/images/filtrartipoplanta.jpg}" alt="Filtrar planta">
-      <form th:action="@{/filtrarplantatipo}">
+      <form th:action="@{/filtrartipoplanta}">
         <button type="submit">Filtrar por tipo de planta</button>
       </form>
       <p>Filtrar ejemplar por tipo de planta que elijas</p>
     </div>
 
-    <!-- Tarjeta 5: Ver Todas las Plantas -->
+
     <div class="card">
       <img th:src="@{/images/filtrar.jpg}" alt="Filtrar">
       <form th:action="@{/filtrarfechas}">
         <button type="submit">Filtrar por fechas</button>
       </form>
-      <form th:action="@{/filtrartipo}">
+      <form th:action="@{/filtrartipoplanta}">
         <button type="submit">Filtrar por tipo de planta</button>
       </form>
       <form th:action="@{/filtrarusuario}">
