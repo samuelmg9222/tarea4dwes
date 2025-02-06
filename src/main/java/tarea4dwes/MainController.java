@@ -437,5 +437,60 @@ public class MainController {
         return "filtrartipoplantamostrar"; 
     }
 
-    
+    @GetMapping("/filtrarporpersona")
+	public String filtrarporpersona(Model model) {
+	 List<Persona> personas = servpersona.verPersonas();
+     model.addAttribute("personas", personas);
+	return "filtrarporpersona";
+	
+}
+    @GetMapping("/filtrarporpersonamostrar/{id}")
+    public String filtrarporpersonamostrar(@PathVariable Long id, Model model) {
+
+        if (id == null) {
+            model.addAttribute("error", "ID de persona inválido.");
+            return "filtrarporpersona"; 
+        }
+
+
+        Persona persona=servpersona.obtenerPersonaPorId(id).orElse(null);
+
+        if (persona == null) {
+            model.addAttribute("error", "No se encontró la persona con el ID proporcionado.");
+            return "filtrarporpersona"; 
+        }
+
+        List<Mensaje> MensajePersona = servmensaje.filtrarMensajePorPersona(persona);
+        model.addAttribute("mensajesdepersona", MensajePersona);
+
+        return "filtrarporpersonamostrar"; 
+    }
+    @GetMapping("/filtrarmensajeporplanta")
+	public String filtrarmensajeporplanta(Model model) {
+	 List<Persona> personas = servpersona.verPersonas();
+     model.addAttribute("personas", personas);
+	return "filtrarmensajeporplanta";
+	
+}
+    @GetMapping("/filtrarporpersonamostrar/{id}")
+    public String filtrarporpersonamostrar(@PathVariable Long id, Model model) {
+
+        if (id == null) {
+            model.addAttribute("error", "ID de persona inválido.");
+            return "filtrarmensajeporplanta"; 
+        }
+
+
+        Persona persona=servpersona.obtenerPersonaPorId(id).orElse(null);
+
+        if (persona == null) {
+            model.addAttribute("error", "No se encontró la persona con el ID proporcionado.");
+            return "filtrarmensajeporplanta"; 
+        }
+
+        List<Mensaje> MensajePersona = servmensaje.filtrarMensajePorPersona(persona);
+        model.addAttribute("mensajesdepersona", MensajePersona);
+
+        return "filtrarporpersonamostrar"; 
+    }
 }
