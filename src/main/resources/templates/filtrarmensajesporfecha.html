@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Filtrar Mensajes por Fecha</title>
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #333333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 45px;
+            margin: 0;
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        nav button {
+            background-color: #009e00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        nav button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            background-color: #444444;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: block;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #555555;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label, input {
+            display: block;
+            margin: 15px 0;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="datetime-local"] {
+            padding: 10px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #filtrar {
+            padding: 10px 15px;
+            background-color: #009e00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        #filtrar:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        footer {
+            background-color: #333333;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>VIVERO</h1>
+        <nav>
+            <form method="GET">
+                <button type="button" onclick="window.location.href='/gestiondeejemplares';">Volver</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Filtrar Mensajes por Rango de Fechas</h2>
+
+        <form action="/filtrarmensajesporfechamostrar" method="get">
+            <label for="fechaInicio">Fecha y hora de inicio:</label>
+            <input type="datetime-local" id="fechaInicio" name="fechaInicio" required>
+
+            <label for="fechaFin">Fecha y hora de fin:</label>
+            <input type="datetime-local" id="fechaFin" name="fechaFin" required>
+
+            <button id="filtrar" type="submit">Filtrar</button>
+        </form>
+
+        <p th:if="${error}" th:text="${error}" class="error"></p>
+    </div>
+
+     <footer>
+        <h4>Vivero de Samuel Muñiz González</h4>
+        <p>Cuidamos de tus plantas, para que ellas cuiden de ti.</p>
+        <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
+        <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
+    </footer>
+
+
+</body>
+</html>
+

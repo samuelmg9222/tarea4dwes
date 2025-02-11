@@ -116,15 +116,15 @@
         <h1>VIVERO</h1>
         <nav>
             <form method="GET">
-                <button type="button" onclick="window.location.href='/filtrarporpersona';">Volver</button>
+                <button type="button" onclick="window.location.href='/filtrarmensajesporplanta';">Volver</button>
             </form>
         </nav>
     </header>
 
     <div class="container">
         <h2>Lista de Mensajes</h2>
-        <p th:if="${mensajesdepersona == null or #lists.isEmpty(mensajesdepersona)}" class="error-message">No hay mensajes disponibles para dicha persona.</p>
-        <table th:if="${mensajesdepersona != null and not #lists.isEmpty(mensajesdepersona)}">
+        <p th:if="${mensajes == null or #lists.isEmpty(mensajes)}" class="error-message">No hay mensajes disponibles para dicha planta.</p>
+        <table th:if="${mensajes != null and not #lists.isEmpty(mensajes)}">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -135,7 +135,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="mensaje : ${mensajesdepersona}">
+                <tr th:each="mensaje : ${mensajes}">
                     <td th:text="${mensaje.id}">ID</td>
                     <td th:text="${mensaje.fechahora}">Fecha y hora</td>
                         <td th:text="${mensaje.mensaje}">Mensaje</td>

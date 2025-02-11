@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Plantas</title>
-    <style> 
+    <title>Ejemplares de la Planta</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #333333;
@@ -15,34 +15,35 @@
             justify-content: space-between;
             height: 100vh;
         }
-  header {
-      width: 90%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #333333;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
 
-    header h1 {
-      font-size: 45px;
-      margin: 0;
-      text-align: center;
-      color:#4CAF50;
-      transform: translateX(100%);
-    }
+        header {
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    button {
-      background-color: #009e00;
-      color: #ffffff;
-      border: none;
-      padding: 10px 15px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-left: 10px;
-    }
+        header h1 {
+            font-size: 45px;
+            margin: 0;
+            text-align: center;
+            color: #4CAF50;
+            transform: translateX(100%);
+        }
+
+        button {
+            background-color: #009e00;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
 
         .container {
             width: 80%;
@@ -115,31 +116,30 @@
         <h1>VIVERO</h1>
         <nav>
             <form method="GET">
-   <button type="button" onclick="window.location.href='/gestiondeejemplares';">Volver</button>
+                <button type="button" onclick="window.location.href='/filtrartipoplanta';">Volver</button>
             </form>
         </nav>
     </header>
 
     <div class="container">
-        <h2>Lista de Plantas</h2>
-        <table>
+ <h2>Lista de Mensajes</h2>
+        <p th:if="${mensajes == null or #lists.isEmpty(mensajes)}" class="error-message">No hay mensajes disponibles para dicho rango de fechas.</p>
+        <table th:if="${mensajes != null and not #lists.isEmpty(mensajes)}">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Nombre Comun</th>
-                    <th>Nombre Cientifico </th>
-                    <th>Acción </th>
+                    <th>ID</th>
+                          <th>Fecha y hora</th>
+      
+ <th>Mensaje</th>
+                          <th>Ejemplar</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="planta : ${plantas}">
-                    <td th:text="${planta.id}">Id</td>
-                    <td th:text="${planta.nombrecomun}">Nombre </td>
-                    <td th:text="${planta.nombrecientifico}">Nombre cientifico</td>
-                    <td>
-                        <a th:href="@{/filtrarmensajeporplantamostrar/{id}(id=${planta.id})}" class="btn-edit">Ver sus mensajes</a>
-
-                    </td>
+                <tr th:each="mensaje : ${mensajes}">
+                    <td th:text="${mensaje.id}">ID</td>
+                    <td th:text="${mensaje.fechahora}">Fecha y hora</td>
+                        <td th:text="${mensaje.mensaje}">Mensaje</td>
+                            <td th:text="${mensaje.ejemplar.nombre}">Ejemplar</td>
                 </tr>
             </tbody>
         </table>

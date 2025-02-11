@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -444,7 +446,7 @@ public class MainController {
 	return "filtrarporpersona";
 	
 }
-    @GetMapping("/filtrarporpersonamostrar/{id}")
+    @GetMapping("/filtrarmensaje/{id}")
     public String filtrarporpersonamostrar(@PathVariable Long id, Model model) {
 
         if (id == null) {
@@ -465,32 +467,59 @@ public class MainController {
 
         return "filtrarporpersonamostrar"; 
     }
-    @GetMapping("/filtrarmensajeporplanta")
+    @GetMapping("/filtrarmensajesporplanta")
 	public String filtrarmensajeporplanta(Model model) {
-	 List<Persona> personas = servpersona.verPersonas();
-     model.addAttribute("personas", personas);
-	return "filtrarmensajeporplanta";
+	 List<Planta> plantas = servplant.verPlantas();
+     model.addAttribute("plantas", plantas);
+	return "filtrarmensajesporplanta";
 	
 }
-    @GetMapping("/filtrarporpersonamostrar/{id}")
-    public String filtrarporpersonamostrar(@PathVariable Long id, Model model) {
+    @GetMapping("/filtrarmensajeporplantamostrar/{id}")
+    public String filtrarmensajeporplantamostrar(@PathVariable Long id, Model model) {
 
         if (id == null) {
-            model.addAttribute("error", "ID de persona inválido.");
-            return "filtrarmensajeporplanta"; 
+            model.addAttribute("error", "ID de planta inválido.");
+            return "filtrarmensajesporplanta"; 
         }
 
 
-        Persona persona=servpersona.obtenerPersonaPorId(id).orElse(null);
+        Planta planta = servplant.obtenerPlantaPorId(id).orElse(null);
 
-        if (persona == null) {
-            model.addAttribute("error", "No se encontró la persona con el ID proporcionado.");
-            return "filtrarmensajeporplanta"; 
+        if (planta == null) {
+            model.addAttribute("error", "No se encontró la planta con el ID proporcionado.");
+            return "filtrarmensajesporplanta"; 
         }
 
-        List<Mensaje> MensajePersona = servmensaje.filtrarMensajePorPersona(persona);
-        model.addAttribute("mensajesdepersona", MensajePersona);
+        List<Mensaje> mensajesdePlanta = servmensaje.filtrarMensajePorPlanta(planta);
+        model.addAttribute("mensajes", mensajesdePlanta);
 
-        return "filtrarporpersonamostrar"; 
+        return "filtrarmensajeporplantamostrar"; 
+    }
+    @GetMapping("/filtrarmensajesporfecha")
+    public String filtrarMensajesPorFecha() {
+    
+        return "filtrarmensajesporfecha";  
+    }
+
+    @GetMapping("/filtrarmensajesporfechamostrar")
+    public String filtrarMensajesPorFechaMostrar(
+            @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
+            @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin,
+            Model model) {
+
+        if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
+            model.addAttribute("error", "Rango de fechas inválido.");
+            return "filtrarmensajesporfecha";  
+        }
+
+
+        fechaInicio = fechaInicio.truncatedTo(ChronoUnit.MINUTES);
+        fechaFin = fechaFin.truncatedTo(ChronoUnit.MINUTES);
+
+
+        List<Mensaje> mensajes = servmensaje.filtrarMensajeRangoFechas(fechaInicio, fechaFin);
+        model.addAttribute("mensajes", mensajes);
+
+        return "filtrarmensajesporfechamostrar";  
     }
 }
