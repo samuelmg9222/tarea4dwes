@@ -1,4 +1,4 @@
-package tarea4dwes;
+package tarea4dwes.controller;
 
 import java.util.List;
 
@@ -43,13 +43,13 @@ public class PersonaController {
 	        		switch (validacion) {
 	                
 	                case -1:
-	                	 model.addAttribute("error", "Solo puede contener letras sin tildes, con espacios o guiones permitidos en nombres compuestos, y debe tener entre 2 y 50 caracteres.");
+	                	 model.addAttribute("error", "El nombre solo puede contener letras sin tildes, con espacios o guiones permitidos en nombres compuestos, y debe tener entre 2 y 50 caracteres.");
 	                     return "nuevapersona"; 
 	                case -2:
-	                	 model.addAttribute("error", "El formato del correo electrónico es incorrecto; asegúrate de que tenga un usuario válido, un '@' y un dominio correcto (ej. usuario@example.com)..");
+	                	 model.addAttribute("error", "El formato del correo electrónico es incorrecto; asegúrate de que tenga un usuario válido, un '@' y un dominio correcto , y sin espacios(ej. usuario@example.com)..");
 	                     return "nuevapersona"; 
 	                case -3:
-	                	 model.addAttribute("error", "Debe tener entre 3 y 20 caracteres, solo letras, números o guiones bajos, sin espacios ni caracteres especiales.");
+	                	 model.addAttribute("error", "El nombre de usuario debe tener entre 3 y 20 caracteres, solo letras, números o guiones bajos, sin espacios ni caracteres especiales.");
 	                     return "nuevapersona"; 
 					case -4:
 	                	 model.addAttribute("error", "Solo se permiten contraseñas con letras y números, con un mínimo de 8 caracteres");
@@ -59,7 +59,7 @@ public class PersonaController {
 	                    return "nuevapersona"; 
 	                    
 	                case -6:   
-	                	 model.addAttribute("error", "Ese email ya existe,intentalo de nuevo con otro");
+	                	 model.addAttribute("error", "Ese email ya existe, intentalo de nuevo con otro");
 	                	 return "nuevapersona"; 
 	                default:
 	                	model.addAttribute("success", "Persona insertada correctamente");

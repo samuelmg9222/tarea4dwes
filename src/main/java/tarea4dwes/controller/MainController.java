@@ -1,4 +1,4 @@
-package tarea4dwes;
+package tarea4dwes.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
