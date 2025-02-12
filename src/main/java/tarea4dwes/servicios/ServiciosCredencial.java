@@ -33,7 +33,7 @@ public class ServiciosCredencial {
 	            return 0;
 	        }
 
-	        if (usuario.equals(cred.getUsuario()) && contraseña.equals(cred.getPassword())){
+	        if (usuario.equalsIgnoreCase(cred.getUsuario()) && contraseña.equals(cred.getPassword())){
 	            return 1;
 	        }
 	        return -1;

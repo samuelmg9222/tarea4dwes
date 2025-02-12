@@ -55,13 +55,6 @@ public class MainController {
     }
 
     @Autowired
-    private ServiciosEjemplar servejemplar; 
-    @Autowired
-    private ServiciosMensaje servmensaje; 
-    @Autowired
-    private ServiciosPersona servpersona;  
-
-    @Autowired
     private ServiciosCredencial servcredencial;  
 
   
@@ -82,7 +75,7 @@ public class MainController {
             return "admin";  
         } else if (result == 1) {
            
-            return "gestiondeplantas";  
+            return "gestiondeplantaspersonal";  
         }
        
         return "redirect:/login";
@@ -95,7 +88,12 @@ public class MainController {
         return "gestiondeplantas";  
     }
 
-  
+    @GetMapping("/gestiondeplantaspersonal")
+    public String gestiondeplantaspersonal() {
+   
+        return "gestiondeplantaspersonal";  
+    }
+
     @GetMapping("/gestiondeejemplares")
     public String gestionDeEjemplares() {
        
@@ -110,9 +108,20 @@ public class MainController {
     }
     
 
-   
-
+    @GetMapping("/admin")
+    public String admin() {
+        
+        return "admin";  
+    }
     
+
+    @GetMapping("/index")
+    public String index() {
+        
+        return "index";  
+    }
+    
+
     
     
     

@@ -116,7 +116,7 @@
     <header>
         <h1>VIVERO</h1>
         <nav>
-            <form action="/modificarplanta" method="GET">
+            <form action="/modificarplantapersonal" method="GET">
                 <button type="submit">Volver</button>
             </form>
         </nav>
@@ -126,7 +126,7 @@
         <h2>Editar Planta</h2>
 
         <!-- Formulario de edición de planta -->
-       <form th:action="@{/modificarplanta/{id}(id=${planta.id})}" method="POST" th:object="${planta}">
+       <form th:action="@{/modificarplantapersonal/{id}(id=${planta.id})}" method="POST" th:object="${planta}">
     <input type="hidden" th:field="*{id}" />
 
     <div class="input-field">
@@ -161,4 +161,4 @@
 
 </body>
 </html>
-
+</html>

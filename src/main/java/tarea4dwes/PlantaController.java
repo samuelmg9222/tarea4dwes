@@ -120,5 +120,52 @@ public class PlantaController {
 	                   
 	           }
 	       }
-	    
+	    @GetMapping("/modificarplantapersonal")
+	    public String modificarplantapersonal(Model model) {
+	        List<Planta> plantas = servplant.verPlantas();
+	        model.addAttribute("plantas", plantas);
+	        return "modificarplantapersonal"; // Vista con la lista de plantas
+	    }
+
+	 
+	    @GetMapping("/edicionplantapersonal/{id}")
+	    public String edicionplantapersonal(@PathVariable("id") Long id, Model model) {
+	        Optional<Planta> planta = servplant.obtenerPlantaPorId(id);
+	        if (planta.isPresent()) {
+	            model.addAttribute("planta", planta.get());
+	            return "edicionplantapersonal";
+	        }
+	        model.addAttribute("error", "Planta no encontrada");
+	        return "redirect:/modificarplantapersonal"; 
+	    }
+
+	    // Modificar los datos de la planta
+	    @PostMapping("/modificarplantapersonal/{id}")
+	    public String modificarplantapersonal(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model) {
+	    	 List<Planta> plantas=servplant.verPlantas();
+	    	 planta.setId(id);
+	    	   int validacion = servplant.verificarModificacion(planta, plantas);
+	           
+	           
+	           switch (validacion) {
+	          
+	               case -2:
+	                   model.addAttribute("error", "Error: El nombre comun debe de tener entre 3 y 100 caracteres, solo letras y espacios.");
+	                   return "edicionplantapersonal"; 
+	               case -3:
+	                   model.addAttribute("error", "Error: El nombre cientifico debe de tener entre 3 y 100 caracteres, solo letras y espacios.");
+	                   return "edicionplantapersonal"; 
+	               case -4:
+	                   model.addAttribute("error", "Debe de modificar almenos un campo, no dejarlos iguales.");
+	                   return "edicionplantapersonal"; 
+	               case 1:
+	            		model.addAttribute("success", "Planta modificada correctamente");
+	            		servplant.modificarplanta(planta);
+	                    return "edicionplantapersonal";
+	               default:
+	               
+	                   return "edicionplantapersonal"; 
+	                   
+	           }
+	       }
 }
