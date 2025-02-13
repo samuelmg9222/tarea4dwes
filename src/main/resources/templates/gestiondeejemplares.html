@@ -141,7 +141,7 @@
     <nav>
     
       <form method="GET">
-   <button type="button" onclick="window.location.href='/admin';">Volver</button>
+       <button type="button" onclick="volver()">Volver</button>
 </form>
     </nav>
   </header> 
@@ -204,6 +204,21 @@
     <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
     <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
   </footer>
+<script th:inline="javascript">
+    var username = /*[[${username}]]*/ 'null'; 
+
+    function volver() {
+        if (username === 'null') {
+            window.location.href = "/login";  
+        } else if (username === 'admin') {
+            // Si es admin, redirigir al panel de admin
+            window.location.href = "/admin"; 
+        } else {
+            // Si no es admin, redirigir a la página principal del usuario
+            window.location.href = "/index";  
+        }
+    }
+</script>
 
 </body>
 </html>

@@ -64,6 +64,7 @@ public class PersonaController {
 	                default:
 	                	model.addAttribute("success", "Persona insertada correctamente");
 	                    servpersona.insertarPersona(persona);
+	                    credenciales.setPersona(persona);
 	                    servcredencial.insertarCredenciales(credenciales);
 	                    return "nuevapersona"; 
 	                }

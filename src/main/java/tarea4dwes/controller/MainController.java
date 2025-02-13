@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import tarea4dwes.modelo.Credenciales;
 import tarea4dwes.modelo.Ejemplar;
 import tarea4dwes.modelo.Mensaje;
@@ -61,23 +63,23 @@ public class MainController {
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String username, 
                                 @RequestParam String password, 
+                                HttpSession session, 
                                 RedirectAttributes redirectAttributes) {
       
         int result = servcredencial.registro(username, password);
 
-      
         if (result == -1) {
-           
             redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas.");
             return "redirect:/login";  
         } else if (result == 0) {
-            
-            return "admin";  
+            session.setAttribute("username", username);
+            return "redirect:/admin";  
         } else if (result == 1) {
-           
-            return "gestiondeplantaspersonal";  
+            
+            session.setAttribute("username", username);
+            return "redirect:/gestiondeejemplares";  
         }
-       
+
         return "redirect:/login";
     }
    
@@ -95,8 +97,25 @@ public class MainController {
     }
 
     @GetMapping("/gestiondeejemplares")
-    public String gestionDeEjemplares() {
+    public String gestionDeEjemplares(HttpSession session, Model model) {
+ 
+        String username = (String) session.getAttribute("username");
+
        
+        if (username == null) {
+            return "redirect:/login"; 
+        }
+
+      
+        Credenciales cr = servcredencial.obtenerCredencialPorUsername(username);
+        if (cr.getPersona() == null) {
+          
+            return "redirect:/login";
+        }
+
+    
+        model.addAttribute("username", cr.getUsuario());
+
         return "gestiondeejemplares";  
     }
 
@@ -109,11 +128,15 @@ public class MainController {
     
 
     @GetMapping("/admin")
-    public String admin() {
+    public String mostrarAdminPage(HttpSession session, Model model) {
+        // Accede al username de la sesión
+        String username = (String) session.getAttribute("username");
         
-        return "admin";  
+        // Puedes agregarlo al modelo para pasarlo a la vista
+        model.addAttribute("username", username);
+        
+        return "admin";  // Redirige a la página admin
     }
-    
 
     @GetMapping("/index")
     public String index() {

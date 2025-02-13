@@ -42,4 +42,9 @@ public class ServiciosCredencial {
 	   public boolean insertarCredenciales(Credenciales cr) {
 		    return credencialesRepository.saveAndFlush(cr) != null;
 		}
-}
+
+
+	    public Credenciales obtenerCredencialPorUsername(String username) {
+	        return credencialesRepository.findByUsuario(username);
+	    }
+	}
