@@ -7,9 +7,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,29 +63,7 @@ public class MainController {
     private ServiciosCredencial servcredencial;  
 
   
-    @PostMapping("/login")
-    public String procesarLogin(@RequestParam String username, 
-                                @RequestParam String password, 
-                                HttpSession session, 
-                                RedirectAttributes redirectAttributes) {
-      
-        int result = servcredencial.registro(username, password);
 
-        if (result == -1) {
-            redirectAttributes.addFlashAttribute("error", "Credenciales incorrectas.");
-            return "redirect:/login";  
-        } else if (result == 0) {
-            session.setAttribute("username", username);
-            return "redirect:/admin";  
-        } else if (result == 1) {
-            
-            session.setAttribute("username", username);
-            return "redirect:/gestiondeejemplares";  
-        }
-
-        return "redirect:/login";
-    }
-   
     
     @GetMapping("/gestiondeplantas")
     public String gestionDePlantas() {
@@ -97,25 +78,35 @@ public class MainController {
     }
 
     @GetMapping("/gestiondeejemplares")
-    public String gestionDeEjemplares(HttpSession session, Model model) {
- 
-        String username = (String) session.getAttribute("username");
+    public String gestionDeEjemplares(Authentication authentication, Model model) {
+        // Obtiene el nombre de usuario directamente desde el objeto Authentication
+        String username = authentication.getName(); // Obtiene el nombre de usuario del objeto de autenticación
 
-       
+        // Si no hay usuario autenticado, redirige al login
         if (username == null) {
             return "redirect:/login"; 
         }
 
-      
+        // Obtiene las credenciales del usuario a través del servicio
         Credenciales cr = servcredencial.obtenerCredencialPorUsername(username);
-        if (cr.getPersona() == null) {
-          
-            return "redirect:/login";
+        
+        // Verifica que las credenciales existan y que el usuario tenga asignada una persona
+        if (cr == null || cr.getPersona() == null) {
+            return "redirect:/login"; // Si no tiene asignada una persona, redirige al login
         }
 
-    
+        // Agrega el nombre de usuario al modelo para su uso en la vista
         model.addAttribute("username", cr.getUsuario());
 
+        // Obtiene los roles del usuario
+        List<String> roles = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList());
+
+        // Agrega los roles al modelo para su uso en la vista
+        model.addAttribute("roles", roles);
+
+        // Devuelve la vista de gestión de ejemplares
         return "gestiondeejemplares";  
     }
 

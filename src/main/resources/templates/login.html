@@ -141,10 +141,9 @@
 </form>
 
         <!-- Mensaje de error dinámico con Thymeleaf -->
-        <div th:if="${error}" class="error-message show">
-            <p th:text="${error}">Credenciales incorrectas. Intenta de nuevo.</p>
-        </div>
-    </div>
+    <div th:if="${param.error}" class="error-message show">
+    <p>Credenciales incorrectas. Intenta de nuevo.</p>
+</div>
 
     <footer>
         <h4>Vivero de Samuel Muñiz González</h4>

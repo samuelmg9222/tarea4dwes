@@ -1,9 +1,12 @@
 package tarea4dwes.servicios;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tarea4dwes.modelo.Credenciales;
+import tarea4dwes.modelo.Ejemplar;
 import tarea4dwes.repositories.CredencialRepository;
 
 
@@ -14,7 +17,12 @@ public class ServiciosCredencial {
 	@Autowired
 	CredencialRepository credencialesRepository;
 	
-	
+	  public List<Credenciales> CredencialesFindAll() {
+return credencialesRepository.findAll();
+
+
+
+}
 	
 	  public Credenciales encontrarCredenciales(String p) {
 	        return credencialesRepository.findByUsuario(p);

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -152,17 +153,15 @@ public class EjemplarController {
 
 	    @GetMapping("/crearmensaje")
 	    public String crearmensajeEjemplar(Model model) {
-
 	        List<Ejemplar> ejemplares = servejemplar.verEjemplares();
 	        model.addAttribute("ejemplares", ejemplares);
 	        return "crearmensaje";
 	    }
 
-	  
 	    @GetMapping("/formulariocrearmensaje/{id}")
 	    public String formulariocrearmensaje(@PathVariable("id") Long idejemplar, Model model) {
-	       Ejemplar ejemplar = servejemplar.obtenerEjempalrPorId(idejemplar).orElse(null);
-	        if (ejemplar!=null) {
+	        Ejemplar ejemplar = servejemplar.obtenerEjempalrPorId(idejemplar).orElse(null);
+	        if (ejemplar != null) {
 	            model.addAttribute("ejemplar", ejemplar);
 	            return "formulariocrearmensaje";
 	        } else {
@@ -177,12 +176,12 @@ public class EjemplarController {
 	                                @RequestParam("mensajeTexto") String mensajeTexto, 
 	                                BindingResult result, 
 	                                Model model, 
-	                                HttpSession session) {
+	                                Authentication authentication) { // Cambiar HttpSession a Authentication
 
-	        // Obtener el nombre de usuario de la sesión
-	        String username = (String) session.getAttribute("username");  // Asumiendo que guardaste el username en la sesión
+	        // Obtener el nombre de usuario de la autenticación
+	        String username = authentication != null ? authentication.getName() : null;
 
-	        // Verificar si el nombre de usuario existe en la sesión
+	        // Verificar si el nombre de usuario existe
 	        if (username == null) {
 	            model.addAttribute("error", "Debes iniciar sesión antes de enviar un mensaje.");
 	            return "formulariocrearmensaje";  // Redirigir a la página de login si no hay usuario
@@ -207,7 +206,7 @@ public class EjemplarController {
 	                    return "formulariocrearmensaje";
 	                    
 	                case -3:
-	                    model.addAttribute("error", "Error: El mensaje solo puede tener números, letras mayúsculas y minúsculas sin tildes y ,.:@/");
+	                    model.addAttribute("error", "Error: El mensaje solo puede tener números, letras mayúsculas y minúsculas sin tildes y ,.:@/.");
 	                    return "formulariocrearmensaje";
 	                    
 	                case 1:
