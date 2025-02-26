@@ -33,14 +33,53 @@ public class Ejemplar implements Serializable{
 
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="idejemplar")
-	private List<Mensaje> mensjaes=new LinkedList<Mensaje>();
+	private List<Mensaje> mensjaes=new LinkedList <Mensaje>();
+	@Column
+	private boolean disponible;
 	
+	@ManyToOne
+	@JoinColumn(name = "idPedido", nullable=true)
+	private Pedido pedido;
 
 	
 	
 	
 	public Ejemplar() {
 		super();
+	}
+
+	public Ejemplar(Long id, String nombre, Planta planta, List<Mensaje> mensjaes, boolean disponible, Pedido pedido) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.planta = planta;
+		this.mensjaes = mensjaes;
+		this.disponible = disponible;
+		this.pedido = pedido;
+	}
+
+	public List<Mensaje> getMensjaes() {
+		return mensjaes;
+	}
+
+	public void setMensjaes(List<Mensaje> mensjaes) {
+		this.mensjaes = mensjaes;
+	}
+
+	public boolean isDisponible() {
+		return disponible;
+	}
+
+	public void setDisponible(boolean disponible) {
+		this.disponible = disponible;
+	}
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
 	}
 
 	public Ejemplar(Long id, String nombre, Planta planta) {
@@ -98,7 +137,8 @@ public class Ejemplar implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Ejemplar [id=" + id + ", nombre=" + nombre + ", planta=" + planta + ", mensjaes=" + mensjaes + "]";
+		return "Ejemplar [id=" + id + ", nombre=" + nombre + ", planta=" + planta + ", mensjaes=" + mensjaes
+				+ ", disponible=" + disponible + ", pedido=" + pedido + "]";
 	}
 
 

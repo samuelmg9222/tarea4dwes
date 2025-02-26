@@ -26,11 +26,18 @@ return credencialesRepository.findAll();
 	
 	  public Credenciales encontrarCredenciales(String p) {
 	        return credencialesRepository.findByUsuario(p);
-		
-		
+	
+	}
+	public int exiteUser(String username) {
+		List<Credenciales> Todas =CredencialesFindAll();
+		for(Credenciales c:Todas) {
+			if(c.getUsuario().toLowerCase().equals(username.toLowerCase())){
+				return 0;
+			}
+		}
+		return 1;
 		
 	}
-	
 	   public int registro(String usuario, String contraseña){
 	        Credenciales cred =credencialesRepository.findByUsuario(usuario);
 	        

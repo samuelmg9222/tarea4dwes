@@ -108,8 +108,12 @@ color:#4CAF50;
   <header>
     <h1>VIVERO</h1>
     <nav>
+  
       <form th:action="@{/login}" method="GET">
             <button type="submit">Iniciar sesión</button>
+        </form>
+        <form th:action="@{/nuevocliente}" method="GET">
+            <button type="submit">Registrarse como cliente</button>
         </form>
         <form th:action="@{/verplantas}" method="GET">
             <button type="submit">Ver plantas</button>

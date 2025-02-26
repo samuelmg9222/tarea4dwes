@@ -52,13 +52,30 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String mostrarLogin(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String mostrarLogin(@RequestParam(value = "error", required = false) String error, 
+                               Model model, 
+                               Authentication authentication) {
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/admin";
+        }
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_PERSONAL"))) {
+            return "redirect:/gestiondeejemplares";
+        }
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_CLIENTE"))) {
+            return "redirect:/cliente";
+        }
+        
+    
         if (error != null) {
             model.addAttribute("error", "Credenciales incorrectas. Intenta de nuevo.");
         }
-        return "login"; 
-    }
+        
 
+        return "login";
+    }
     @Autowired
     private ServiciosCredencial servcredencial;  
 
@@ -72,68 +89,101 @@ public class MainController {
     }
 
     @GetMapping("/gestiondeplantaspersonal")
-    public String gestiondeplantaspersonal() {
-   
+    public String gestiondeplantaspersonal(Authentication authentication) {
+   	 if (!authentication.getAuthorities().stream()
+             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+        
+         return "redirect:/access-denied";
+   	 }
         return "gestiondeplantaspersonal";  
     }
 
     @GetMapping("/gestiondeejemplares")
     public String gestionDeEjemplares(Authentication authentication, Model model) {
-        // Obtiene el nombre de usuario directamente desde el objeto Authentication
-        String username = authentication.getName(); // Obtiene el nombre de usuario del objeto de autenticación
+        String username = authentication.getName();
 
-        // Si no hay usuario autenticado, redirige al login
+
         if (username == null) {
             return "redirect:/login"; 
         }
 
-        // Obtiene las credenciales del usuario a través del servicio
         Credenciales cr = servcredencial.obtenerCredencialPorUsername(username);
-        
-        // Verifica que las credenciales existan y que el usuario tenga asignada una persona
+
         if (cr == null || cr.getPersona() == null) {
-            return "redirect:/login"; // Si no tiene asignada una persona, redirige al login
+            return "redirect:/login"; 
         }
 
-        // Agrega el nombre de usuario al modelo para su uso en la vista
+
         model.addAttribute("username", cr.getUsuario());
 
-        // Obtiene los roles del usuario
         List<String> roles = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        // Agrega los roles al modelo para su uso en la vista
+
         model.addAttribute("roles", roles);
 
-        // Devuelve la vista de gestión de ejemplares
         return "gestiondeejemplares";  
     }
 
 
     @GetMapping("/gestiondepersonal")
-    public String gestionDePersonal() {
-        
+    public String gestionDePersonal(Authentication authentication) {
+    	 if (!authentication.getAuthorities().stream()
+                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+            
+             return "redirect:/access-denied";
+         }
         return "gestiondepersonal";  
     }
     
-
+ 
+    
     @GetMapping("/admin")
-    public String mostrarAdminPage(HttpSession session, Model model) {
-        // Accede al username de la sesión
+    public String mostrarAdminPage(HttpSession session, Model model,Authentication authentication) {
+    	 if (!authentication.getAuthorities().stream()
+                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+             
+             return "redirect:/access-denied"; 
+         }
         String username = (String) session.getAttribute("username");
         
-        // Puedes agregarlo al modelo para pasarlo a la vista
+       
         model.addAttribute("username", username);
         
-        return "admin";  // Redirige a la página admin
+        return "admin";  
     }
 
     @GetMapping("/index")
-    public String index() {
+    public String index(Authentication authentication) {
+        try {
+          
+            if (authentication != null) {
+                String username = authentication.getName();
+                if (authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                    return "redirect:/admin";
+                }
+                if (authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_CLIENTE"))) {
+                    return "redirect:/cliente";
+                }
+           
+                if (authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_PERSONAL"))) {
+                    return "redirect:/gestiondeejeplares";
+                }
+           
+           
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         
         return "index";  
     }
+
     
 
     

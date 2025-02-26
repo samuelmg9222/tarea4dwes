@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,15 +29,21 @@ public class PlantaController {
 	        return "verplantas";
 	    }
 	  @GetMapping("/nuevaplanta")
-	    public String mostrarFormulario(Model model) {
-	    
+	    public String mostrarFormulario(Model model,Authentication authentication) {
+		   if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        model.addAttribute("planta", new Planta());
 	        return "nuevaplanta";
 	    }
 
 	    @PostMapping("/registrar-planta")
-	    public String registrarPlanta( Planta planta, BindingResult result, Model model) {
-	     
+	    public String registrarPlanta( Planta planta, BindingResult result, Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        if (result.hasErrors()) {
 	            
 	            return "nuevaplanta";
@@ -73,7 +80,12 @@ public class PlantaController {
 	        }
 	    }
 	    @GetMapping("/modificarplanta")
-	    public String listarPlantas(Model model) {
+	    
+	    public String listarPlantas(Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        List<Planta> plantas = servplant.verPlantas();
 	        model.addAttribute("plantas", plantas);
 	        return "modificarplanta"; // Vista con la lista de plantas
@@ -81,7 +93,11 @@ public class PlantaController {
 
 	 
 	    @GetMapping("/edicionplanta/{id}")
-	    public String editarPlanta(@PathVariable("id") Long id, Model model) {
+	    public String editarPlanta(@PathVariable("id") Long id, Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        Optional<Planta> planta = servplant.obtenerPlantaPorId(id);
 	        if (planta.isPresent()) {
 	            model.addAttribute("planta", planta.get());
@@ -93,8 +109,12 @@ public class PlantaController {
 
 	    // Modificar los datos de la planta
 	    @PostMapping("/modificarplanta/{id}")
-	    public String modificarPlanta(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model) {
-	    	 List<Planta> plantas=servplant.verPlantas();
+	    public String modificarPlanta(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
+	    	List<Planta> plantas=servplant.verPlantas();
 	    	 planta.setId(id);
 	    	   int validacion = servplant.verificarModificacion(planta, plantas);
 	           
@@ -121,7 +141,11 @@ public class PlantaController {
 	           }
 	       }
 	    @GetMapping("/modificarplantapersonal")
-	    public String modificarplantapersonal(Model model) {
+	    public String modificarplantapersonal(Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        List<Planta> plantas = servplant.verPlantas();
 	        model.addAttribute("plantas", plantas);
 	        return "modificarplantapersonal"; // Vista con la lista de plantas
@@ -129,7 +153,11 @@ public class PlantaController {
 
 	 
 	    @GetMapping("/edicionplantapersonal/{id}")
-	    public String edicionplantapersonal(@PathVariable("id") Long id, Model model) {
+	    public String edicionplantapersonal(@PathVariable("id") Long id, Model model,Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        Optional<Planta> planta = servplant.obtenerPlantaPorId(id);
 	        if (planta.isPresent()) {
 	            model.addAttribute("planta", planta.get());
@@ -141,7 +169,11 @@ public class PlantaController {
 
 	    // Modificar los datos de la planta
 	    @PostMapping("/modificarplantapersonal/{id}")
-	    public String modificarplantapersonal(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model) {
+	    public String modificarplantapersonal(@PathVariable("id") Long id,@ModelAttribute Planta planta, BindingResult result, Model model, Authentication authentication) {
+	    	if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	    	 List<Planta> plantas=servplant.verPlantas();
 	    	 planta.setId(id);
 	    	   int validacion = servplant.verificarModificacion(planta, plantas);

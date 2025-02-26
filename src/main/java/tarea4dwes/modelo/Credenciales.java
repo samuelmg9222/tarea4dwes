@@ -30,10 +30,12 @@ public class Credenciales implements Serializable{
 
 	    @OneToOne
 	    
-	    @JoinColumn(name = "idpersona") 
+	    @JoinColumn(name = "idpersona",nullable = true) 
 	    private Persona persona;
 	    
-	    
+	    @OneToOne
+		@JoinColumn(name = "idCliente", unique = true, nullable = true)
+		private Cliente cliente;
 	    
 	    
 		public Persona getPersona() {
@@ -50,12 +52,21 @@ public class Credenciales implements Serializable{
 
 	
 
-		public Credenciales(String usuario, String password, Persona persona) {
+		public Credenciales(String usuario, String password, Persona persona,Cliente cliente) {
 			super();
 			
 			this.usuario = usuario;
 			this.password = password;
 			this.persona = persona;
+			this.cliente=cliente;
+		}
+
+		public Cliente getCliente() {
+			return cliente;
+		}
+
+		public void setCliente(Cliente cliente) {
+			this.cliente = cliente;
 		}
 
 		public Long getId() {
@@ -103,8 +114,10 @@ public class Credenciales implements Serializable{
 		@Override
 		public String toString() {
 			return "Credenciales [id=" + id + ", usuario=" + usuario + ", password=" + password + ", persona=" + persona
-					+ "]";
+					+ ", cliente=" + cliente + "]";
 		}
+
+		
 
 		
 

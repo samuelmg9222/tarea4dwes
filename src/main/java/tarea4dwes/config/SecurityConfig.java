@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -26,49 +27,50 @@ import tarea4dwes.servicios.ServiciosCredencial;
 public class SecurityConfig {
 	 @Autowired
 	    private ServiciosCredencial servcredencial;  
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index", "/verplantas", "/images/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        .successHandler((request, response, authentication) -> {
-                            String role = authentication.getAuthorities().iterator().next().getAuthority();
-                            switch (role) {
-                                case "ROLE_ADMIN":
-                                    response.sendRedirect("/admin");
-                                    break;
-                                case "ROLE_PERSONAL":
-                                    response.sendRedirect("/gestiondeejemplares"); 
-                                    break;
-                                case "ROLE_CLIENTE":
-                                    response.sendRedirect("/cliente"); 
-                                    break;
-                                default:
-                                    response.sendRedirect("/default");
-                                    break;
-                            }
-                        })
-                )
+	 @Bean
+	 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		    http
+		      
+	         .authorizeHttpRequests(auth -> auth
+	             .requestMatchers("/", "/index", "/verplantas", "/images/**", "/nuevocliente", "/registrar-cliente").permitAll()
+	             .requestMatchers("/cliente").hasAnyRole("CLIENTE")
+	             .anyRequest().authenticated() 
+	         )
+	         .formLogin(form -> form
+	             .loginPage("/login")
+	             .permitAll()
+	             .successHandler((request, response, authentication) -> {
+	                 String role = authentication.getAuthorities().iterator().next().getAuthority();
+	                 switch (role) {
+	                     case "ROLE_ADMIN":
+	                         response.sendRedirect("/admin");
+	                         break;
+	                     case "ROLE_PERSONAL":
+	                         response.sendRedirect("/gestiondeejemplares");
+	                         break;
+	                     case "ROLE_CLIENTE":
+	                         response.sendRedirect("/cliente");
+	                         break;
+	                     default:
+	                         response.sendRedirect("/login");
+	                         break;
+	                 }
+	             })
+	         )
+	         .logout(logout -> logout
+	             .logoutSuccessHandler((request, response, authentication) -> {
+	                 request.getSession().invalidate();
+	                 response.sendRedirect("/login?logout"); 
+	             })
+	             .permitAll()
+	         )
+	         .sessionManagement(session -> session
+	             .maximumSessions(1) 
+	             .sessionRegistry(sessionRegistry())
+	         );
 
-                .logout(logout -> logout
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            request.getSession().invalidate(); // Invalida la sesión
-                            response.sendRedirect("/login?logout"); // Redirige después de cerrar sesión
-                        })
-                        .permitAll()
-                )
-                .sessionManagement(session -> session
-                        .maximumSessions(1) // Limitar a una sesión por usuario
-                        .sessionRegistry(sessionRegistry()) // Registro de sesiones
-                );
-
-        return http.build();
-    }
+	     return http.build();
+	 }
 
     @Bean
     public UserDetailsService userDetailsService() {

@@ -81,59 +81,50 @@ public class EjemplarController {
 	     return "redirect:/listaejemplares";
 	 }
 	    
-	    @GetMapping("/nuevoejemplar")
-	    	public String nuevoEjemplar(Model model) {
-	    	 List<Planta> plantas = servplant.verPlantas();
-	         model.addAttribute("plantas", plantas);
-	    	return "nuevoejemplar";
-	    	
-	    }
-	    
-	    @PostMapping("/nuevoejemplar")
-	    public String registrarEjemplar(@ModelAttribute Ejemplar ejemplar, HttpSession session, RedirectAttributes redirectAttributes) {
+	 @GetMapping("/nuevoejemplar")
+	 public String nuevoEjemplar(Model model) {
+	     List<Planta> plantas = servplant.verPlantas();
+	     model.addAttribute("plantas", plantas);
+	     return "nuevoejemplar"; // Asegúrate de que este nombre coincida con el nombre del archivo HTML sin la extensión
+	 }
+
+	    @PostMapping
+	    public String registrarEjemplar(@RequestParam("planta") Long plantaId, Authentication authentication, RedirectAttributes redirectAttributes) {
 	        try {
-	            // Obtener el nombre de usuario desde la sesión
-	            String username = (String) session.getAttribute("username");  // Asumiendo que guardaste el username en la sesión
+	            String username = authentication != null ? authentication.getName() : null;
 
 	            if (username == null) {
 	                redirectAttributes.addFlashAttribute("message", "Debes iniciar sesión antes de registrar un ejemplar.");
-	                return "redirect:/login"; // Redirigir al login si no hay usuario
+	                return "redirect:/login"; 
 	            }
 
-	            // Obtener las credenciales de la base de datos usando el username
+	            // Obtener las credenciales usando el nombre de usuario
 	            Credenciales credencial = servcredencial.obtenerCredencialPorUsername(username);
-	            
+
 	            // Si no encuentras la credencial, muestra un error
 	            if (credencial == null) {
 	                redirectAttributes.addFlashAttribute("message", "Credenciales no encontradas.");
 	                return "redirect:/login";
 	            }
 
-	            // Ahora que tienes la credencial, obtienes la persona asociada
-	            Persona persona = credencial.getPersona(); // Suponiendo que la relación es algo así
+	            // Obtener la persona asociada a las credenciales
+	            Persona persona = credencial.getPersona(); 
 	            if (persona == null) {
 	                redirectAttributes.addFlashAttribute("message", "No se encontró la persona asociada.");
-	                return "redirect:/login";  // Si no hay persona, redirige al login
+	                return "redirect:/login";  
 	            }
 
-	            // Ahora puedes usar la `persona` para crear el mensaje o lo que necesites
-	            String name = servejemplar.generarNombreEjemplar(ejemplar.getPlanta().getCodigo());
-	            ejemplar.setNombre(name);
+	            // Crear el ejemplar
+	            Ejemplar ejemplar = new Ejemplar();
+	            ejemplar.setPlanta(servplant.obtenerPlantaPorId(plantaId).orElse(null));
+	            ejemplar.setNombre(servejemplar.generarNombreEjemplar(ejemplar.getPlanta().getCodigo()));
 
-	            String nombrePlanta = ejemplar.getPlanta().getNombrecomun();
-	            LocalDateTime fechaH = LocalDateTime.now();
-	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-	            String fechaformated = fechaH.format(formatter);
-
-	            // Crear mensaje con la persona asociada
-	            Mensaje mensaje = new Mensaje(fechaH, servmensaje.generarMensaje(persona.getId(), fechaformated), persona, ejemplar);
-
+	            // Lógica para verificar y guardar el ejemplar
 	            int resultado = servejemplar.verificarInsercion(ejemplar.getPlanta().getCodigo());
 	            switch (resultado) {
 	                case 1:
 	                    servejemplar.insertarEjempalr(ejemplar);
-	                    servmensaje.insertarMensaje(mensaje);
-	                    redirectAttributes.addFlashAttribute("message", "Ejemplar de " + nombrePlanta.toLowerCase() + " registrado con éxito");
+	                    redirectAttributes.addFlashAttribute("message", "Ejemplar registrado con éxito");
 	                    return "redirect:/nuevoejemplar"; 
 
 	                case -2:
@@ -147,8 +138,90 @@ public class EjemplarController {
 
 	        } catch (Exception e) {
 	            redirectAttributes.addFlashAttribute("message", "Hubo un error al registrar el ejemplar.");
+	            e.printStackTrace(); // Imprimir el error en la consola para debug
 	            return "redirect:/nuevoejemplar"; 
 	        }
+	    }
+
+	    @GetMapping("/crearejemplar")
+	    public String crearejemplarr(Model model) {
+	        List<Planta> plantas = servplant.verPlantas();
+	        model.addAttribute("plantas", plantas);
+	        return "crearejemplar";
+	    }
+	    @GetMapping("/formulariocrearejemplar/{id}")
+	    public String formulariocrearejemplar(@PathVariable("id") Long idplanta, Model model) {
+	        Planta planta = servplant.obtenerPlantaPorId(idplanta).orElse(null);
+	        if (planta != null) {
+	            model.addAttribute("planta", planta);
+	            return "formulariocrearejemplar";
+	        } else {
+	            model.addAttribute("error", "Planta no encontrada");
+	            return "redirect:/crearejemplar"; 
+	        }
+	    }
+	    
+	    
+	    @PostMapping("/crearejemplar/{id}")
+	    public String crearejemplar(@PathVariable("id") Long id, 
+	                                @ModelAttribute Planta planta, 
+	                           
+	                                BindingResult result, 
+	                                Model model, 
+	                                Authentication authentication) {
+
+	  
+	        String username = authentication != null ? authentication.getName() : null;
+
+	       
+	        if (username == null) {
+	            model.addAttribute("error", "Debes iniciar sesión antes de enviar un mensaje.");
+	            return "formulariocrearmensaje";  
+	        }
+
+
+	        Planta planta2 = servplant.obtenerPlantaPorId(id).orElse(null);
+
+	        if (planta2 != null) {
+	            LocalDateTime fechaH = LocalDateTime.now();
+	            
+
+	                    Credenciales credenciales = servcredencial.obtenerCredencialPorUsername(username);
+	                    
+	                    if (credenciales == null) {
+	                        model.addAttribute("error", "No se encontraron credenciales para el usuario.");
+	                        return "formulariocrearmensaje";  
+	                    }
+
+	                
+	                    Persona persona = credenciales.getPersona();
+	                    
+	                    if (persona == null) {
+	                        model.addAttribute("error", "No se encontró la persona asociada a las credenciales.");
+	                        return "formulariocrearmensaje";  
+	                    }
+	                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+	    	            String fechaformated = fechaH.format(formatter);
+	                    Ejemplar ejemplar =new Ejemplar();
+	                    ejemplar.setPlanta(planta2);
+	                    ejemplar.setNombre(servejemplar.generarNombreEjemplar(planta2.getCodigo()));
+	                    servejemplar.insertarEjempalr(ejemplar);
+	                    Mensaje mensaje = new Mensaje();
+	                    mensaje.setMensaje(servmensaje.generarMensaje(persona.getId(), fechaformated));
+	                    mensaje.setEjemplar(ejemplar);
+	                    mensaje.setPersona(persona);  // Usar la persona asociada al usuario actual
+	                    mensaje.setFechahora(fechaH);
+
+	                    // Insertar el mensaje en la base de datos
+	                    servmensaje.insertarMensaje(mensaje);
+
+	                    model.addAttribute("success", "Mensaje creado correctamente");
+	               
+	        } else {
+	            model.addAttribute("error", "El ejemplar no existe.");
+	        }
+
+	        return "formulariocrearejemplar";
 	    }
 
 	    @GetMapping("/crearmensaje")
@@ -176,24 +249,24 @@ public class EjemplarController {
 	                                @RequestParam("mensajeTexto") String mensajeTexto, 
 	                                BindingResult result, 
 	                                Model model, 
-	                                Authentication authentication) { // Cambiar HttpSession a Authentication
+	                                Authentication authentication) {
 
-	        // Obtener el nombre de usuario de la autenticación
+	  
 	        String username = authentication != null ? authentication.getName() : null;
 
-	        // Verificar si el nombre de usuario existe
+	       
 	        if (username == null) {
 	            model.addAttribute("error", "Debes iniciar sesión antes de enviar un mensaje.");
-	            return "formulariocrearmensaje";  // Redirigir a la página de login si no hay usuario
+	            return "formulariocrearmensaje";  
 	        }
 
-	        // Obtener el ejemplar usando el id
+
 	        Ejemplar ejemplar2 = servejemplar.obtenerEjempalrPorId(id).orElse(null);
 
 	        if (ejemplar2 != null) {
 	            LocalDateTime fechaH = LocalDateTime.now();
 	            
-	            // Verificar si el mensaje cumple con las validaciones
+	            
 	            int verificarmensaje = servmensaje.verificarMensajeIntroducido(mensajeTexto);
 	            
 	            switch (verificarmensaje) {

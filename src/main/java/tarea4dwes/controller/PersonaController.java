@@ -3,6 +3,7 @@ package tarea4dwes.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,8 +24,11 @@ public class PersonaController {
 	@Autowired
 	ServiciosCredencial servcredencial;
 	   @GetMapping("/nuevapersona")
-	    public String mostrarFormularioPersona(Model model) {
-	    
+	    public String mostrarFormularioPersona(Model model,Authentication authentication) {
+		   if (!authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
+		        
+		         return "redirect:/access-denied";
+		   	 }
 	        model.addAttribute("persona", new Persona());
 	        model.addAttribute("credenciales", new Credenciales());
 	        return "nuevapersona";

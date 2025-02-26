@@ -130,17 +130,22 @@
         <h1>VIVERO</h1>
         <nav>
            <form method="GET">
-<button type="button" onclick="window.location.href='/gestiondeplantas';">Volver</button>
+<button type="button" onclick="window.location.href='/index';">Volver</button>
 </form>
     </header>
 
     <div class="login-container">
-        <h2>Registrar nueva planta</h2>
-        <form th:action="@{/registrar-planta}" method="POST">
-            <input type="text" name="codigo" class="input-field" placeholder="Código" required>
-            <input type="text" name="nombrecomun" class="input-field" placeholder="Nombre común" required>
-            <input type="text" name="nombrecientifico" class="input-field" placeholder="Nombre científico" required>
-            <button type="submit" class="btn-submit">Registrar planta</button>
+        <h2>Registrarse como cliente</h2>
+        <form th:action="@{/registrar-cliente}" method="POST">
+            <input type="text" name="nombre" class="input-field" placeholder="nombre" required>
+            <input type="date" name="fechanac" class="input-field" placeholder="fecha de nacimiento" required>
+            <input type="text" name="nif" class="input-field" placeholder="nif" required>
+            <input type="text" name="direccion" class="input-field" placeholder="direccion" required>
+            <input type="text" name="telefono" class="input-field" placeholder="telefono" required>
+               <input type="text" name="email" class="input-field" placeholder="email" required>
+                    <input type="text" name="credenciales.usuario" class="input-field" placeholder="nombre de usuario" required>
+                     <input type="text" name="credenciales.password" class="input-field" placeholder="contraseña" required>
+            <button type="submit" class="btn-submit">Registrarse</button>
         </form>
         
         <!-- Mensaje de error -->
