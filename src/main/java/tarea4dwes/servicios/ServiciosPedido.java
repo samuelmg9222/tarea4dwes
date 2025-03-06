@@ -1,5 +1,6 @@
 package tarea4dwes.servicios;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,11 @@ PedidoRepository pedidorepos;
 		
 	}
 	
+=======
+import org.springframework.stereotype.Service;
+
+@Service
+public class ServiciosPedido {
+
+>>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 }

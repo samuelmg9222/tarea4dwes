@@ -28,7 +28,11 @@ private static final long serialVersionUID =1L;
 	private String mensaje;
 	
 	  @ManyToOne
+<<<<<<< HEAD
 	  @JoinColumn(name = "idpersona", nullable = false)
+=======
+	    @JoinColumn(name = "idpersona", nullable = false)
+>>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 	    private Persona persona;
 	  @ManyToOne
 	    @JoinColumn(name = "idejemplar", nullable = false)

@@ -209,10 +209,17 @@ public class EjemplarController {
 	                    Mensaje mensaje = new Mensaje();
 	                    mensaje.setMensaje(servmensaje.generarMensaje(persona.getId(), fechaformated));
 	                    mensaje.setEjemplar(ejemplar);
+<<<<<<< HEAD
 	                    mensaje.setPersona(persona); 
 	                    mensaje.setFechahora(fechaH);
 
 	                   
+=======
+	                    mensaje.setPersona(persona);  // Usar la persona asociada al usuario actual
+	                    mensaje.setFechahora(fechaH);
+
+	                    // Insertar el mensaje en la base de datos
+>>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 	                    servmensaje.insertarMensaje(mensaje);
 
 	                    model.addAttribute("success", "Mensaje creado correctamente");
