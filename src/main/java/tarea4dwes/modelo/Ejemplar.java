@@ -8,10 +8,7 @@ import java.util.Objects;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-<<<<<<< HEAD
 import jakarta.persistence.FetchType;
-=======
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,11 +36,7 @@ public class Ejemplar implements Serializable{
 	@JoinColumn(name="idejemplar")
 	private List<Mensaje> mensjaes=new LinkedList <Mensaje>();
 	@Column
-<<<<<<< HEAD
 	private Boolean disponible;
-=======
-	private boolean disponible;
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 	
 	@ManyToOne
 	@JoinColumn(name = "idPedido", nullable=true)

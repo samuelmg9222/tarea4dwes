@@ -63,7 +63,6 @@ public class ServiciosCliente {
 		
 	}
 	
-<<<<<<< HEAD
 	public int existeEmail(String email) {
 	    List<Cliente> todos = FindAll();
 
@@ -97,41 +96,6 @@ public class ServiciosCliente {
 	    return 1; // No se encontró el NIF
 	}
 
-=======
-	public int existeEmail(String email){
-		List<Cliente> Todos=FindAll();
-		for(Cliente c: Todos) {
-			if(c.getEmail().toLowerCase().equals(email.toLowerCase())) {
-				return 0;
-			}
-		}
-		
-		return 1;
-		
-	}
-	
-	public int existeTel(String tel){
-		List<Cliente> Todos=FindAll();
-		for(Cliente c: Todos) {
-			if(c.getTelefono().toLowerCase().equals(tel.toLowerCase())) {
-				return 0;
-			}
-		}
-		
-		return 1;
-		
-	}public int existeNif(String nif){
-		List<Cliente> Todos=FindAll();
-		for(Cliente c: Todos) {
-			if(c.getNif().toLowerCase().equals(nif.toLowerCase())) {
-				return 0;
-			}
-		}
-		
-		return 1;
-		
-	}
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
 	
 	public List<Cliente> FindAll(){
 		return clienteRepository.findAll();

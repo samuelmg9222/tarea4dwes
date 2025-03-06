@@ -24,11 +24,7 @@
             font-size: 45px;
         }
 
-<<<<<<< HEAD
         button {
-=======
-         button {
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
             background-color: #009e00;
             color: #ffffff;
             border: none;
@@ -66,16 +62,6 @@
             color: white;
         }
 
-<<<<<<< HEAD
-=======
-        img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
         footer {
             width: 100%;
             background-color: #333333;
@@ -84,7 +70,6 @@
             text-align: center;
             margin-top: 20px;
         }
-<<<<<<< HEAD
 
         .alert {
             opacity: 0;
@@ -199,43 +184,3 @@
 </script>
 </body>
 </html>
-=======
-    </style>
-</head>
-<body>
-  <header>
-    <h1>VIVERO - Cliente</h1>
-    <nav>
-      <form th:action="@{/logout}" method="post" style="display:inline;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit">Cerrar sesión</button>
-      </form>
-    </nav>
-  </header> 
-    <div class="plant-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre Común</th>
-                    <th>Nombre Científico</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="planta : ${plantas}">
-
-                    <td th:text="${planta.nombrecomun}">Planta</td>
-                    <td th:text="${planta.nombrecientifico}">Descripción</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <footer>
-        <h4>Vivero de Samuel Muñiz González</h4>
-        <p>Cuidamos de tus plantas, para que ellas cuiden de ti.</p>
-        <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
-        <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
-    </footer>
-</body>
-</html>
->>>>>>> e89eb3d70de556070897c64d97c6f454d4ce03db
