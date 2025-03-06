@@ -33,8 +33,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index", "/verplantas", "/images/**", "/nuevocliente", "/registrar-cliente").permitAll()
                 .requestMatchers("/cliente").hasAnyRole("CLIENTE")
-                .anyRequest().authenticated() 
+                .requestMatchers("/nuevoejemplar").hasAnyRole("ADMIN", "PERSONAL") 
+                .anyRequest().authenticated()
             )
+            
             .formLogin(form -> form
                 .loginPage("/login")
                 .permitAll()
@@ -56,16 +58,24 @@ public class SecurityConfig {
                     }
                 })
             )
+            
             .logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) -> {
                     request.getSession().invalidate();
-                    response.sendRedirect("/login?logout"); 
+                    response.sendRedirect("/login?logout");
                 })
                 .permitAll()
             )
+
             .sessionManagement(session -> session
-                .maximumSessions(1) 
+                .maximumSessions(1)
                 .sessionRegistry(sessionRegistry())
+            )
+            
+            .exceptionHandling(exceptions -> exceptions
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/access-denied");
+                })
             );
 
         return http.build();

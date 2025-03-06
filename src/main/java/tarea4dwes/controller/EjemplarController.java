@@ -81,16 +81,18 @@ public class EjemplarController {
 	     return "redirect:/listaejemplares";
 	 }
 	    
-	 @GetMapping("/nuevoejemplar")
-	 public String nuevoEjemplar(Model model) {
-	     List<Planta> plantas = servplant.verPlantas();
-	     model.addAttribute("plantas", plantas);
-	     return "nuevoejemplar"; // Asegúrate de que este nombre coincida con el nombre del archivo HTML sin la extensión
-	 }
-
-	    @PostMapping
-	    public String registrarEjemplar(@RequestParam("planta") Long plantaId, Authentication authentication, RedirectAttributes redirectAttributes) {
+	    @GetMapping("/nuevoejemplar")
+	    	public String nuevoEjemplar(Model model) {
+	    	 List<Planta> plantas = servplant.verPlantas();
+	         model.addAttribute("plantas", plantas);
+	    	return "nuevoejemplar";
+	    	
+	    }
+	    
+	    @PostMapping("/nuevoejemplar")
+	    public String registrarEjemplar(@ModelAttribute Ejemplar ejemplar, Authentication authentication, RedirectAttributes redirectAttributes) {
 	        try {
+	            // Obtener el username desde Authentication en vez de HttpSession
 	            String username = authentication != null ? authentication.getName() : null;
 
 	            if (username == null) {
@@ -98,10 +100,9 @@ public class EjemplarController {
 	                return "redirect:/login"; 
 	            }
 
-	            // Obtener las credenciales usando el nombre de usuario
+	            // Obtener las credenciales de la base de datos usando el username
 	            Credenciales credencial = servcredencial.obtenerCredencialPorUsername(username);
-
-	            // Si no encuentras la credencial, muestra un error
+	            
 	            if (credencial == null) {
 	                redirectAttributes.addFlashAttribute("message", "Credenciales no encontradas.");
 	                return "redirect:/login";
@@ -114,17 +115,24 @@ public class EjemplarController {
 	                return "redirect:/login";  
 	            }
 
-	            // Crear el ejemplar
-	            Ejemplar ejemplar = new Ejemplar();
-	            ejemplar.setPlanta(servplant.obtenerPlantaPorId(plantaId).orElse(null));
-	            ejemplar.setNombre(servejemplar.generarNombreEjemplar(ejemplar.getPlanta().getCodigo()));
+	            // Generar el nombre del ejemplar
+	            String name = servejemplar.generarNombreEjemplar(ejemplar.getPlanta().getCodigo());
+	            ejemplar.setNombre(name);
 
-	            // Lógica para verificar y guardar el ejemplar
+	            String nombrePlanta = ejemplar.getPlanta().getNombrecomun();
+	            LocalDateTime fechaH = LocalDateTime.now();
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+	            String fechaformated = fechaH.format(formatter);
+
+	            // Crear el mensaje con la persona asociada
+	            Mensaje mensaje = new Mensaje(fechaH, servmensaje.generarMensaje(persona.getId(), fechaformated), persona, ejemplar);
+
 	            int resultado = servejemplar.verificarInsercion(ejemplar.getPlanta().getCodigo());
 	            switch (resultado) {
 	                case 1:
 	                    servejemplar.insertarEjempalr(ejemplar);
-	                    redirectAttributes.addFlashAttribute("message", "Ejemplar registrado con éxito");
+	                    servmensaje.insertarMensaje(mensaje);
+	                    redirectAttributes.addFlashAttribute("message", "Ejemplar de " + nombrePlanta.toLowerCase() + " registrado con éxito");
 	                    return "redirect:/nuevoejemplar"; 
 
 	                case -2:
@@ -138,103 +146,23 @@ public class EjemplarController {
 
 	        } catch (Exception e) {
 	            redirectAttributes.addFlashAttribute("message", "Hubo un error al registrar el ejemplar.");
-	            e.printStackTrace(); // Imprimir el error en la consola para debug
 	            return "redirect:/nuevoejemplar"; 
 	        }
 	    }
 
-	    @GetMapping("/crearejemplar")
-	    public String crearejemplarr(Model model) {
-	        List<Planta> plantas = servplant.verPlantas();
-	        model.addAttribute("plantas", plantas);
-	        return "crearejemplar";
-	    }
-	    @GetMapping("/formulariocrearejemplar/{id}")
-	    public String formulariocrearejemplar(@PathVariable("id") Long idplanta, Model model) {
-	        Planta planta = servplant.obtenerPlantaPorId(idplanta).orElse(null);
-	        if (planta != null) {
-	            model.addAttribute("planta", planta);
-	            return "formulariocrearejemplar";
-	        } else {
-	            model.addAttribute("error", "Planta no encontrada");
-	            return "redirect:/crearejemplar"; 
-	        }
-	    }
-	    
-	    
-	    @PostMapping("/crearejemplar/{id}")
-	    public String crearejemplar(@PathVariable("id") Long id, 
-	                                @ModelAttribute Planta planta, 
-	                           
-	                                BindingResult result, 
-	                                Model model, 
-	                                Authentication authentication) {
-
-	  
-	        String username = authentication != null ? authentication.getName() : null;
-
-	       
-	        if (username == null) {
-	            model.addAttribute("error", "Debes iniciar sesión antes de enviar un mensaje.");
-	            return "formulariocrearmensaje";  
-	        }
-
-
-	        Planta planta2 = servplant.obtenerPlantaPorId(id).orElse(null);
-
-	        if (planta2 != null) {
-	            LocalDateTime fechaH = LocalDateTime.now();
-	            
-
-	                    Credenciales credenciales = servcredencial.obtenerCredencialPorUsername(username);
-	                    
-	                    if (credenciales == null) {
-	                        model.addAttribute("error", "No se encontraron credenciales para el usuario.");
-	                        return "formulariocrearmensaje";  
-	                    }
-
-	                
-	                    Persona persona = credenciales.getPersona();
-	                    
-	                    if (persona == null) {
-	                        model.addAttribute("error", "No se encontró la persona asociada a las credenciales.");
-	                        return "formulariocrearmensaje";  
-	                    }
-	                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-	    	            String fechaformated = fechaH.format(formatter);
-	                    Ejemplar ejemplar =new Ejemplar();
-	                    ejemplar.setPlanta(planta2);
-	                    ejemplar.setNombre(servejemplar.generarNombreEjemplar(planta2.getCodigo()));
-	                    servejemplar.insertarEjempalr(ejemplar);
-	                    Mensaje mensaje = new Mensaje();
-	                    mensaje.setMensaje(servmensaje.generarMensaje(persona.getId(), fechaformated));
-	                    mensaje.setEjemplar(ejemplar);
-	                    mensaje.setPersona(persona); 
-	                    mensaje.setFechahora(fechaH);
-
-	                   
-	                    servmensaje.insertarMensaje(mensaje);
-
-	                    model.addAttribute("success", "Mensaje creado correctamente");
-	               
-	        } else {
-	            model.addAttribute("error", "El ejemplar no existe.");
-	        }
-
-	        return "formulariocrearejemplar";
-	    }
-
 	    @GetMapping("/crearmensaje")
 	    public String crearmensajeEjemplar(Model model) {
+
 	        List<Ejemplar> ejemplares = servejemplar.verEjemplares();
 	        model.addAttribute("ejemplares", ejemplares);
 	        return "crearmensaje";
 	    }
 
+	  
 	    @GetMapping("/formulariocrearmensaje/{id}")
 	    public String formulariocrearmensaje(@PathVariable("id") Long idejemplar, Model model) {
-	        Ejemplar ejemplar = servejemplar.obtenerEjempalrPorId(idejemplar).orElse(null);
-	        if (ejemplar != null) {
+	       Ejemplar ejemplar = servejemplar.obtenerEjempalrPorId(idejemplar).orElse(null);
+	        if (ejemplar!=null) {
 	            model.addAttribute("ejemplar", ejemplar);
 	            return "formulariocrearmensaje";
 	        } else {
@@ -251,22 +179,36 @@ public class EjemplarController {
 	                                Model model, 
 	                                Authentication authentication) {
 
-	  
-	        String username = authentication != null ? authentication.getName() : null;
+	        // Obtener el nombre de usuario de la sesión
+	    	   String username = authentication != null ? authentication.getName() : null;
 
-	       
-	        if (username == null) {
-	            model.addAttribute("error", "Debes iniciar sesión antes de enviar un mensaje.");
-	            return "formulariocrearmensaje";  
-	        }
+	            if (username == null) {
+	             
+	                return "redirect:/login"; 
+	            }
 
+	            // Obtener las credenciales de la base de datos usando el username
+	            Credenciales credencial = servcredencial.obtenerCredencialPorUsername(username);
+	            
+	            if (credencial == null) {
+	            
+	                return "redirect:/login";
+	            }
 
+	            // Obtener la persona asociada a las credenciales
+	            Persona persona = credencial.getPersona(); 
+	            if (persona == null) {
+	            
+	                return "redirect:/login";  
+	            }
+
+	        // Obtener el ejemplar usando el id
 	        Ejemplar ejemplar2 = servejemplar.obtenerEjempalrPorId(id).orElse(null);
 
 	        if (ejemplar2 != null) {
 	            LocalDateTime fechaH = LocalDateTime.now();
 	            
-	            
+	            // Verificar si el mensaje cumple con las validaciones
 	            int verificarmensaje = servmensaje.verificarMensajeIntroducido(mensajeTexto);
 	            
 	            switch (verificarmensaje) {
@@ -279,7 +221,7 @@ public class EjemplarController {
 	                    return "formulariocrearmensaje";
 	                    
 	                case -3:
-	                    model.addAttribute("error", "Error: El mensaje solo puede tener números, letras mayúsculas y minúsculas sin tildes y ,.:@/.");
+	                    model.addAttribute("error", "Error: El mensaje solo puede tener números, letras mayúsculas y minúsculas sin tildes y ,.:@/");
 	                    return "formulariocrearmensaje";
 	                    
 	                case 1:
@@ -291,8 +233,7 @@ public class EjemplarController {
 	                        return "formulariocrearmensaje";  // Si no se encuentran credenciales, mostrar error
 	                    }
 
-	                    // Obtener la persona asociada a las credenciales
-	                    Persona persona = credenciales.getPersona();
+	                 
 	                    
 	                    if (persona == null) {
 	                        model.addAttribute("error", "No se encontró la persona asociada a las credenciales.");

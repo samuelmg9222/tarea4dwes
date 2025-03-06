@@ -107,7 +107,7 @@
     </div>
 
     <form action="/nuevoejemplar" method="POST">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
         <h3>Seleccionar Planta</h3>
 
         <table>
