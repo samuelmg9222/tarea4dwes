@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Plantas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333333;
+            padding: 10px 0;
+        }
+
+        header h1 {
+            color: #4CAF50;
+            font-size: 45px;
+        }
+
+         button {
+            background-color: #009e00;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #444444;
+        }
+
+        .plant-container {
+            padding: 20px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #555555;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #777;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #333333;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Listado de plantas</h1>
+       <button type="button" onclick="window.history.back()">Volver</button>
+    </header>
+
+    <div class="plant-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre Común</th>
+                    <th>Nombre Científico</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="planta : ${plantas}">
+
+                    <td th:text="${planta.nombrecomun}">Planta</td>
+                    <td th:text="${planta.nombrecientifico}">Descripción</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <h4>Vivero de Samuel Muñiz González</h4>
+        <p>Cuidamos de tus plantas, para que ellas cuiden de ti.</p>
+        <p>&copy; 2025 Samuel Muñiz González. Todos los derechos reservados.</p>
+        <a href="mailto:contacto@viverosamuel.com">Contacto: contacto@viverosamuel.com</a>
+    </footer>
+</body>
+</html>
