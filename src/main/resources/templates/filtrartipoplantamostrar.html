@@ -130,13 +130,16 @@
                     <th>ID</th>
                           <th>Nombre</th>
       
-
+<th>Disponible</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="ejemplar : ${ejemplaresdeplanta}">
                     <td th:text="${ejemplar.id}">ID</td>
                     <td th:text="${ejemplar.nombre}">Nombre</td>
+                    <td th:text="${ejemplar.disponible == true ? 'Sí' : 'No'}">Stock</td>
+            
+
                 </tr>
             </tbody>
         </table>

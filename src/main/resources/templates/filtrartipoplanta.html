@@ -122,27 +122,30 @@
 
     <div class="container">
         <h2>Lista de Plantas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nombre Común</th>
-                    <th>Nombre Científico</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="planta : ${plantas}">
-                    <td th:text="${planta.codigo}">Código</td>
-                    <td th:text="${planta.nombrecomun}">Nombre común</td>
-                    <td th:text="${planta.nombrecientifico}">Nombre científico</td>
-                    <td>
-                        <a th:href="@{/filtrartipoplantamostrar/{id}(id=${planta.id})}" class="btn-edit">Ver sus ejemplares</a>
+       <form th:action="@{/filtrartipoplantamostrar}" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>Código</th>
+                <th>Nombre Común</th>
+                <th>Nombre Científico</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="planta : ${plantas}">
+                <td>
+                    <input type="checkbox" name="ids" th:value="${planta.id}">
+                </td>
+                <td th:text="${planta.codigo}">Código</td>
+                <td th:text="${planta.nombrecomun}">Nombre común</td>
+                <td th:text="${planta.nombrecientifico}">Nombre científico</td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit">Ver ejemplares seleccionados</button>
+</form>
 
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
     <footer>

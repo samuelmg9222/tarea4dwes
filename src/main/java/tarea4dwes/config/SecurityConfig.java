@@ -31,9 +31,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/index", "/verplantas", "/images/**", "/nuevocliente", "/registrar-cliente").permitAll()
-                .requestMatchers("/cliente").hasAnyRole("CLIENTE")
-                .requestMatchers("/nuevoejemplar").hasAnyRole("ADMIN", "PERSONAL") 
+                .requestMatchers("/", "/index", "/verplantas", "/images/**", "/nuevocliente", "/registrar-cliente","/login").permitAll()
+                .requestMatchers("/cliente", "/carrito").hasAnyRole("CLIENTE")
+                .requestMatchers("/nuevoejemplar","/filtrarmensajeporplantamostrar","/filtrarmensajesporfecha","/filtrarmensajesporfechamostrar",
+                		"/filtrarmensajesporplanta","/filtrarporpersona","/filtrarporpersonamostrar","/filtrartipoplanta","/filtrartipoplantamostrar",
+                		"/formulariocrearmensaje","/formulariocrearejemplar","/gestiondeejemplares","/listaejemplares","/nuevoejemplar",
+                		"/vermensajesporejemplar").hasAnyRole("ADMIN", "PERSONAL") 
+                .requestMatchers("/admin", "/edicionplanta", "/gestiondepersonal","/gestiondeplantas","/modificarplanta",
+                		"/nuevapersona","/nuevaplanta").hasAnyRole("ADMIN") 
                 .anyRequest().authenticated()
             )
             
@@ -62,7 +67,7 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) -> {
                     request.getSession().invalidate();
-                    response.sendRedirect("/login?logout");
+                    response.sendRedirect("/");
                 })
                 .permitAll()
             )

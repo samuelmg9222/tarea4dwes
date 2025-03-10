@@ -3,6 +3,7 @@ package tarea4dwes.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,7 +119,7 @@ public class EjemplarController {
 	            // Generar el nombre del ejemplar
 	            String name = servejemplar.generarNombreEjemplar(ejemplar.getPlanta().getCodigo());
 	            ejemplar.setNombre(name);
-
+ejemplar.setDisponible(true);
 	            String nombrePlanta = ejemplar.getPlanta().getNombrecomun();
 	            LocalDateTime fechaH = LocalDateTime.now();
 	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -274,26 +275,26 @@ public class EjemplarController {
 		return "filtrartipoplanta";
 		
 	}
-	    @GetMapping("/filtrartipoplantamostrar/{id}")
-	    public String filtrartipoplantamostrar(@PathVariable Long id, Model model) {
+	    @PostMapping("/filtrartipoplantamostrar")
+	    public String filtrartipoplantamostrar(@RequestParam List<Long> ids, Model model) {
 
-	        if (id == null) {
-	            model.addAttribute("error", "ID de planta inválido.");
+	        if (ids == null || ids.isEmpty()) {
+	            model.addAttribute("error", "Debe seleccionar al menos una planta.");
 	            return "filtrartipoplanta"; 
 	        }
 
+	        List<Ejemplar> todosEjemplares = new ArrayList<>();
 
-	        Planta planta = servplant.obtenerPlantaPorId(id).orElse(null);
-
-	        if (planta == null) {
-	            model.addAttribute("error", "No se encontró la planta con el ID proporcionado.");
-	            return "filtrartipoplanta"; 
+	        for (Long id : ids) {
+	            Planta planta = servplant.obtenerPlantaPorId(id).orElse(null);
+	            if (planta != null) {
+	                List<Ejemplar> ejemplaresDePlanta = servejemplar.verEjemplaresPorCodigoPlanta(planta.getCodigo());
+	                todosEjemplares.addAll(ejemplaresDePlanta);
+	            }
 	        }
 
-	        List<Ejemplar> ejemplaresDePlanta = servejemplar.verEjemplaresPorCodigoPlanta(planta.getCodigo());
-	        model.addAttribute("ejemplaresdeplanta", ejemplaresDePlanta);
-
-	        return "filtrartipoplantamostrar"; 
+	        model.addAttribute("ejemplaresdeplanta", todosEjemplares);
+	        return "filtrartipoplantamostrar";
 	    }
 
 	    @GetMapping("/filtrarporpersona")
