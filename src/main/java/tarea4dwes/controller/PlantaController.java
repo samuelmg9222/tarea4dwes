@@ -72,6 +72,9 @@ public class PlantaController {
 	            case -6:
 	                model.addAttribute("error", "El código solo puede contener letras.");
 	                return "nuevaplanta"; 
+	            case -7:
+	                model.addAttribute("error", "El código no puede tener espacios.");
+	                return "nuevaplanta"; 
 	            default:
 	            	model.addAttribute("success", "Planta insertada correctamente");
 	                servplant.insertarPlanta(planta);

@@ -22,29 +22,31 @@ public class ServiciosPlanta {
 		plantarepos.saveAndFlush(p);
 	}
 	public int validarInsercion(Planta p) {
-		
-			if(plantarepos.existeCodigo(p))
-			return -1;
-		
-			if(p.getNombrecomun().length()>30||p.getNombrecomun().length()<3)
-		
-			return -2;
-			if(!p.getNombrecomun().matches("^[a-zA-Z ]+$"))
-			
-			return -3;
-			if(p.getNombrecientifico().length()>30||p.getNombrecientifico().length()<3)
-			
-			return -4;
-			if(!p.getNombrecientifico().matches("^[a-zA-Z ]+$"))	
-			
-			return -5;
-			if(!p.getCodigo().matches("^[a-zA-Z ]+$"))
-			{
-			return -6;
-			}
-		return 0;
-		
+
+	    if (plantarepos.existeCodigo(p))
+	        return -1;
+
+	    if (p.getNombrecomun().length() > 30 || p.getNombrecomun().length() < 3)
+	        return -2;
+
+	    if (!p.getNombrecomun().matches("^[a-zA-Z ]+$"))
+	        return -3;
+
+	    if (p.getNombrecientifico().length() > 30 || p.getNombrecientifico().length() < 3)
+	        return -4;
+
+	    if (!p.getNombrecientifico().matches("^[a-zA-Z ]+$"))
+	        return -5;
+
+	    if (!p.getCodigo().matches("^[a-zA-Z]+$"))  // Sin espacios
+	        return -6;
+
+	    if (p.getCodigo().contains(" "))  // Si contiene espacios, retorna -7
+	        return -7;
+
+	    return 0;
 	}
+
 	public boolean validarPl(Planta p) {
 		if(plantarepos.existeCodigo(p)) return true;
 	
